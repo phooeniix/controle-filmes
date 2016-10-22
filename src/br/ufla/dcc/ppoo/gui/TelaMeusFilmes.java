@@ -3,6 +3,8 @@ package br.ufla.dcc.ppoo.gui;
 import br.ufla.dcc.ppoo.i18n.I18N;
 import br.ufla.dcc.ppoo.imagens.GerenciadorDeImagens;
 import br.ufla.dcc.ppoo.util.Utilidades;
+import br.ufla.dcc.ppoo.modelo.Filme;
+import br.ufla.dcc.ppoo.dao.lista.FilmeDAOLista;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
@@ -24,14 +26,14 @@ import javax.swing.event.ListSelectionListener;
 
 /**
  * Classe que representa a tela Meus Filmes
- * 
+ *
  * @author Julio Alves e Paulo Jr.
  */
 public class TelaMeusFilmes {
 
     // referência para a tela principal
     private final TelaPrincipal telaPrincipal;
-            
+
     // componentes da tela
     private JDialog janela;
     private GridBagLayout layout;
@@ -55,7 +57,7 @@ public class TelaMeusFilmes {
 
      /**
      * Constrói a tela Meus Filmes guardando a referência da tela principal.
-     * 
+     *
      * @param telaPrincipal Referência da tela principal.
      */
     public TelaMeusFilmes(TelaPrincipal telaPrincipal) {
@@ -91,7 +93,28 @@ public class TelaMeusFilmes {
         tbFilmes.setPreferredScrollableViewportSize(new Dimension(500, 70));
         tbFilmes.setFillsViewportHeight(true);
     }
+    //Criando evento de click no botão para salvar alteração
+    private void btnSalvarFilme(java.awt.event.ActionEvent evt) {
+      //Pegando dados escritos dentro de todos jTExtFild
+      //Armazenando em variáveis locais de função
+      String nome = txtNome.getText();
+      String genero = txtGenero.getText();
+      int ano = Integer.parseInt(txtAno.getText());
+      Double duracao = Double.parseDouble(taDescricao.getText());
+      String descricao = taDescricao.getText();
 
+      Filme filme = new Filme(nome, genero, ano, duracao, descricao);
+      //Criando um objeto no qual possui todas as opearções a serem realizadas
+      //CRUD
+      FilmesDAOLista operFilme = new FilmesDAOLista();
+      try{
+        operFilme.adicionarFilme(filme);
+
+      }catch(Exception e){
+
+      }
+
+    }
     /**
      * Adiciona um componente à tela.
      */

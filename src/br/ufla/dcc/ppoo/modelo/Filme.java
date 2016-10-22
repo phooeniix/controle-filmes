@@ -18,7 +18,7 @@ public class Filme {
     private String nome;
     private String genero;
     private int ano;
-    private float duracao;
+    private double duracao;
     private String descricao;
 
     /**
@@ -76,14 +76,14 @@ public class Filme {
     /**
      * @return the duracao
      */
-    public float getDuracao() {
+    public double getDuracao() {
         return duracao;
     }
 
     /**
      * @param duracao the duracao to set
      */
-    public void setDuracao(float duracao) {
+    public void setDuracao(double duracao) {
         this.duracao = duracao;
     }
 
@@ -113,6 +113,6 @@ public class Filme {
      */
     public void setCod(double cod) {
         this.cod = cod;
-    }    
+    }
 
 }
