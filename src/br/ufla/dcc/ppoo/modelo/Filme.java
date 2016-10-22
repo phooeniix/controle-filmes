@@ -14,7 +14,7 @@ public class Filme {
     /*Criando atributos da classe, nome das variaveis e conteudo da janela de
       conteúdo da janela de filmes.
     */
-    private double cod;
+    private double cod ;
     private String nome;
     private String genero;
     private int ano;
@@ -25,8 +25,9 @@ public class Filme {
      * @return the nome
      */
 
-    public Filme(double cod, String nome, String genero, int ano, String duracao, String descricao){
-      this.cod = cod;
+    public Filme(String nome, String genero, int ano, String duracao, String descricao){
+      //pensando na lógica de auto increment para o cod+1 a cada new Filmes
+      //this.cod +=1;
       this.nome = nome;
       this.genero = genero;
       this.ano = ano;
