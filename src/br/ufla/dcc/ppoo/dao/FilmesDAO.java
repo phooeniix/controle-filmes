@@ -14,6 +14,6 @@ public interface FilmesDAO {
 
 
     public void adicionarFilme(Filme filme);
-    public void editarFilme(Filme filme)
+    public void editarFilme(Filme filme);
 
 }
