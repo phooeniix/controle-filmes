@@ -18,14 +18,14 @@ public class Filme {
     private String nome;
     private String genero;
     private int ano;
-    private String duracao;
+    private float duracao;
     private String descricao;
 
     /**
      * @return the nome
      */
 
-    public Filme(String nome, String genero, int ano, String duracao, String descricao){
+    public Filme(String nome, String genero, int ano, float duracao, String descricao){
       //pensando na lógica de auto increment para o cod+1 a cada new Filmes
       //this.cod +=1;
       this.nome = nome;
@@ -76,14 +76,14 @@ public class Filme {
     /**
      * @return the duracao
      */
-    public String getDuracao() {
+    public float getDuracao() {
         return duracao;
     }
 
     /**
      * @param duracao the duracao to set
      */
-    public void setDuracao(String duracao) {
+    public void setDuracao(float duracao) {
         this.duracao = duracao;
     }
 
@@ -113,6 +113,6 @@ public class Filme {
      */
     public void setCod(double cod) {
         this.cod = cod;
-    }
+    }    
 
 }

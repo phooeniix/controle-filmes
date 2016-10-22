@@ -23,7 +23,7 @@ public class FilmeDAOLista {
   private FilmeDAOLista(){
     //Criando uma lista de objetos filmes filmes
     listaFilme = new ArrayList<Filme>();
-    listaFime.add(new Filme("A era do gelo", ));
+    listaFilme.add(new Filme("A era do gelo","Animação", 2001, 120, "Uma incrível aventura pelo mundo gelado para um resgate de um bebê"));
 
   }
   public static FilmeDAOLista obterInstancia(){
