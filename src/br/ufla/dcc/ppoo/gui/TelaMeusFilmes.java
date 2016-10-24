@@ -1,5 +1,8 @@
 package br.ufla.dcc.ppoo.gui;
 
+import br.ufla.dcc.persistence.PersistenceSingleton;
+import br.ufla.dcc.persistence.TFilmesJpaController;
+import br.ufla.dcc.persistence.TFilmes;
 import br.ufla.dcc.ppoo.i18n.I18N;
 import br.ufla.dcc.ppoo.imagens.GerenciadorDeImagens;
 import br.ufla.dcc.ppoo.util.Utilidades;
@@ -13,6 +16,7 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
+import javax.persistence.EntityManagerFactory;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -36,7 +40,6 @@ public class TelaMeusFilmes {
 
     // referência para a tela principal
     private final TelaPrincipal telaPrincipal;
-    private final FilmeDAOLista listaFilme;
 
     // componentes da tela
     private JDialog janela;
@@ -66,7 +69,45 @@ public class TelaMeusFilmes {
      */
     public TelaMeusFilmes(TelaPrincipal telaPrincipal) {
         this.telaPrincipal = telaPrincipal;
-        this.listaFilme = new FilmeDAOLista();        
+        EntityManagerFactory emf = PersistenceSingleton.getInstance().getEntityManagerFactory();       
+
+        TFilmesJpaController filmeDAO = new TFilmesJpaController(emf);
+        
+        List<TFilmes> listaFilme = filmeDAO.findTFilmesEntities();
+        
+        preencherTabelaFilmes(listaFilme);
+    }
+    
+    /**
+     * Adiciona um componente à tela.
+     */
+    private void preencherTabelaFilmes( List<TFilmes> listaFilme ){
+        
+        DefaultTableModel modelo = (DefaultTableModel) tbFilmes.getModel();
+                
+        int rowCount = modelo.getRowCount();
+        for (int i = 0; i < rowCount; i++) {
+            modelo.removeRow(i);
+        }
+        
+        
+        tbFilmes.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                I18N.obterRotuloFilmeCod(),
+                I18N.obterRotuloFilmeNome(),
+                I18N.obterRotuloFilmeGenero()
+            }
+        ));
+        for(TFilmes f: listaFilme){
+            modelo.addRow(new Object[]{f.getCod(),f.getNome(), f.getGenero()});
+        }
+        
+        tbFilmes.setPreferredScrollableViewportSize(new Dimension(500, 70));
+        tbFilmes.setFillsViewportHeight(true);       
+                
     }
 
     /**
@@ -74,6 +115,7 @@ public class TelaMeusFilmes {
      * e, ao final, exibe a tela.
      */
     public void inicializar() {
+        
         construirTela();
         configurarEventosTela();
         exibirTela();
@@ -82,43 +124,7 @@ public class TelaMeusFilmes {
     /**
      * Constrói a janela tratando internacionalização, componentes e layout.
      */
-    private void construirTabela() {
-        
-        DefaultTableModel modelo = (DefaultTableModel) tbFilmes.getModel();
-        /*int rowCount = modelo.getRowCount();
-        for (int i = 0; i < rowCount; i++) {
-            modelo.removeRow(i);
-        }*/
-        Object[] titulosColunas = {
-            I18N.obterRotuloFilmeCod(),
-            I18N.obterRotuloFilmeNome(),
-            I18N.obterRotuloFilmeGenero()
-        };
-        
-        if(listaFilme.obterLista() != null){
-            for(Filme_old f: listaFilme.obterLista()){
-                modelo.addRow(new Object[]{f.getCod(), f.getNome(), f.getGenero()});;
-            }
-       
-        }
-//        DefaultTableModel model = new DefaultTableModel(
-//        listaFilme.obterLista().toArray(new String[listaFilme.obterLista().size()][]), titulosColunas);
-        
-        // Dados "fake"
-        Object[][] dados = {
-            {1, "Gravidade", "Ficção Científica"},
-            {2, "Shrek", "Animação"}
-        };
-        
-
-        tbFilmes = new JTable(dados, titulosColunas);
-        //tbFilmes.setModel(model);
-        tbFilmes.setPreferredScrollableViewportSize(new Dimension(500, 70));
-        tbFilmes.setFillsViewportHeight(true);
-}
-    /**
-     * Adiciona um componente à tela.
-     */
+    
     private void adicionarComponente(Component c,
             int anchor, int fill, int linha,
             int coluna, int largura, int altura) {
@@ -225,7 +231,7 @@ public class TelaMeusFilmes {
      * Adiciona os componentes da tela tratando layout e internacionalização
      */
     private void adicionarComponentes() {
-        construirTabela();
+        //pre();
         JScrollPane scrollPaneTabela = new JScrollPane(tbFilmes);
         adicionarComponente(scrollPaneTabela,
                 GridBagConstraints.CENTER,
@@ -341,22 +347,31 @@ public class TelaMeusFilmes {
     private void salvarFilme(){
         //Pegando dados escritos dentro de todos jTExtFild
         //Armazenando em variáveis locais de função
+        TFilmes f = new TFilmes();
+        
         String nome = txtNome.getText();
         String genero = txtGenero.getText();
         int ano = Integer.parseInt(txtAno.getText());
         Double duracao = Double.parseDouble(txtDuracao.getText());
         String descricao = taDescricao.getText();
+        
+        f.setNome(nome);
+        f.setDescricao(descricao);
+        f.setAno(ano);
+        f.setGenero(genero);
+        f.setDuracao(duracao);
+        
 
-  //  System.out.println(nome + " " + genero + " " + ano + " " + duracao);
-        Filme_old filme = new Filme_old(nome, genero, ano, duracao, descricao);
-        //Criando um objeto no qual possui todas as opearções a serem realizadas
-        //CRUD
         
         int x = JOptionPane.showConfirmDialog(null,"Deseja mesmo realizar essa operação?");
         if(x==0){
-            listaFilme.adicionarFilme(filme);
+            EntityManagerFactory emf = PersistenceSingleton.getInstance().getEntityManagerFactory();
+            
+            TFilmesJpaController conFilme = new TFilmesJpaController(emf);
+            
+            conFilme.create(f);
             JOptionPane.showMessageDialog(null, "Operação realizada com sucesso!");
-            construirTabela();
+            preencherTabelaFilmes(null);
         }
     }
     /**
