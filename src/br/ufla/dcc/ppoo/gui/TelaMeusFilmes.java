@@ -12,10 +12,12 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -23,6 +25,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableModel;
 
 /**
  * Classe que representa a tela Meus Filmes
@@ -33,6 +36,7 @@ public class TelaMeusFilmes {
 
     // referência para a tela principal
     private final TelaPrincipal telaPrincipal;
+    private final FilmeDAOLista listaFilme;
 
     // componentes da tela
     private JDialog janela;
@@ -62,6 +66,7 @@ public class TelaMeusFilmes {
      */
     public TelaMeusFilmes(TelaPrincipal telaPrincipal) {
         this.telaPrincipal = telaPrincipal;
+        this.listaFilme = new FilmeDAOLista();        
     }
 
     /**
@@ -78,43 +83,34 @@ public class TelaMeusFilmes {
      * Constrói a janela tratando internacionalização, componentes e layout.
      */
     private void construirTabela() {
+        DefaultTableModel modelo = (DefaultTableModel) tbFilmes.getModel();
+        List<Filme> listaFilme = null;
+        int rowCount = modelo.getRowCount();
+        for (int i = 0; i < rowCount; i++) {
+            modelo.removeRow(i);
+        }
+        for(Filme f: listaFilme){
+            modelo.addRow(new Object[]{f.getCod(), f.getNome(), f.getGenero()});
+        }
+        
+        
         Object[] titulosColunas = {
+            I18N.obterRotuloFilmeCod(),
             I18N.obterRotuloFilmeNome(),
             I18N.obterRotuloFilmeGenero()
         };
 
         // Dados "fake"
         Object[][] dados = {
-            {"Gravidade", "Ficção Científica"},
-            {"Shrek", "Animação"}
+            {1, "Gravidade", "Ficção Científica"},
+            {2, "Shrek", "Animação"}
         };
+        
 
         tbFilmes = new JTable(dados, titulosColunas);
         tbFilmes.setPreferredScrollableViewportSize(new Dimension(500, 70));
         tbFilmes.setFillsViewportHeight(true);
-    }
-    //Criando evento de click no botão para salvar alteração
-    private void btnSalvarFilme(java.awt.event.ActionEvent evt) {
-      //Pegando dados escritos dentro de todos jTExtFild
-      //Armazenando em variáveis locais de função
-      String nome = txtNome.getText();
-      String genero = txtGenero.getText();
-      int ano = Integer.parseInt(txtAno.getText());
-      Double duracao = Double.parseDouble(taDescricao.getText());
-      String descricao = taDescricao.getText();
-
-      Filme filme = new Filme(nome, genero, ano, duracao, descricao);
-      //Criando um objeto no qual possui todas as opearções a serem realizadas
-      //CRUD
-      FilmesDAOLista operFilme = new FilmesDAOLista();
-      try{
-        operFilme.adicionarFilme(filme);
-
-      }catch(Exception e){
-
-      }
-
-    }
+}
     /**
      * Adiciona um componente à tela.
      */
@@ -336,6 +332,28 @@ public class TelaMeusFilmes {
         taDescricao.setText(texto);
     }
 
+    
+    private void salvarFilme(){
+        //Pegando dados escritos dentro de todos jTExtFild
+        //Armazenando em variáveis locais de função
+        String nome = txtNome.getText();
+        String genero = txtGenero.getText();
+        int ano = Integer.parseInt(txtAno.getText());
+        Double duracao = Double.parseDouble(txtDuracao.getText());
+        String descricao = taDescricao.getText();
+
+  //  System.out.println(nome + " " + genero + " " + ano + " " + duracao);
+        Filme filme = new Filme(nome, genero, ano, duracao, descricao);
+        //Criando um objeto no qual possui todas as opearções a serem realizadas
+        //CRUD
+        
+        int x = JOptionPane.showConfirmDialog(null,"Deseja mesmo realizar essa operação?");
+        if(x==0){
+            listaFilme.adicionarFilme(filme);
+            JOptionPane.showMessageDialog(null, "Operação realizada com sucesso!");
+            construirTabela();
+        }
+    }
     /**
      * Configura os eventos da tela.
      */
@@ -365,6 +383,8 @@ public class TelaMeusFilmes {
         btnSalvarFilme.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                //Função para salvar o filme
+                salvarFilme();
                 prepararComponentesEstadoInicial();
             }
         });

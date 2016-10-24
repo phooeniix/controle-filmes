@@ -368,6 +368,10 @@ public class I18N {
      *
      * @return Texto do rótulo nome do filme.
      */
+    public static String obterRotuloFilmeCod() {
+        return rb.getString("rotulo.filme.cod");
+    }
+    
     public static String obterRotuloFilmeNome() {
         return rb.getString("rotulo.filme.nome");
     }

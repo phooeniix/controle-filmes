@@ -20,7 +20,7 @@ public class FilmeDAOLista {
   //criando uma lista em memória dos filmes cadastrados
   private final List<Filme> listaFilme;
 
-  private FilmeDAOLista(){
+  public FilmeDAOLista(){
     //Criando uma lista de objetos filmes filmes
     listaFilme = new ArrayList<Filme>();
     listaFilme.add(new Filme("A era do gelo","Animação", 2001, 120, "Uma incrível aventura pelo mundo gelado para um resgate de um bebê"));
@@ -47,6 +47,9 @@ public class FilmeDAOLista {
   }
   public void RemoverFilme(Filme filme) {
       listaFilme.add(filme);
+  }
+  public Filme ListarFilme(){
+      return (Filme) listaFilme;
   }
 
 
