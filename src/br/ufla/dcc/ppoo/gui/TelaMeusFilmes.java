@@ -6,8 +6,6 @@ import br.ufla.dcc.persistence.TFilmes;
 import br.ufla.dcc.ppoo.i18n.I18N;
 import br.ufla.dcc.ppoo.imagens.GerenciadorDeImagens;
 import br.ufla.dcc.ppoo.util.Utilidades;
-import br.ufla.dcc.ppoo.modelo.Filme_old;
-import br.ufla.dcc.ppoo.dao.lista.FilmeDAOLista;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
@@ -81,33 +79,38 @@ public class TelaMeusFilmes {
     /**
      * Adiciona um componente à tela.
      */
-    private void preencherTabelaFilmes( List<TFilmes> listaFilme ){
+    private void preencherTabelaFilmes( List<TFilmes> listaFilme ){        
         
-        DefaultTableModel modelo = (DefaultTableModel) tbFilmes.getModel();
-                
-        int rowCount = modelo.getRowCount();
-        for (int i = 0; i < rowCount; i++) {
-            modelo.removeRow(i);
-        }
+        Object[] titulosColunas = {
+            I18N.obterRotuloFilmeCod(),
+            I18N.obterRotuloFilmeNome(),
+            I18N.obterRotuloFilmeGenero()
+        };
+        Object[][] dados = {
+            {1 ,"Gravidade", "Ficção Científica"}
+        };
         
         
-        tbFilmes.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-
-            },
-            new String [] {
-                I18N.obterRotuloFilmeCod(),
-                I18N.obterRotuloFilmeNome(),
-                I18N.obterRotuloFilmeGenero()
-            }
-        ));
-        for(TFilmes f: listaFilme){
-            modelo.addRow(new Object[]{f.getCod(),f.getNome(), f.getGenero()});
-        }
+        //criando um DEFAULT MODELO para acessar métodos da tabela
+        DefaultTableModel modelo = new DefaultTableModel(dados, titulosColunas);
         
+        // Dados "fake"
+        tbFilmes = new JTable(modelo);
         tbFilmes.setPreferredScrollableViewportSize(new Dimension(500, 70));
         tbFilmes.setFillsViewportHeight(true);       
                 
+        
+//        int rowCount = modelo.getRowCount();
+//        for (int i = 0; i < rowCount; i++) {
+//            modelo.removeRow(i);
+//        }
+        
+        //Percorrendo dados retornando do banco de dados e escrevendo na tabela
+        for(TFilmes f: listaFilme){
+            modelo.addRow(new Object[]{f.getCod(),f.getNome(), f.getGenero()});
+        };
+
+        
     }
 
     /**
