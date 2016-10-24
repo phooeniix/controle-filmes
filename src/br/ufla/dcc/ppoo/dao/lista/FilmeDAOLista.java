@@ -4,8 +4,7 @@
  * and open the template in the editor.
  */
 package br.ufla.dcc.ppoo.dao.lista;
-import br.ufla.dcc.ppoo.dao.FilmesDAO;
-import br.ufla.dcc.ppoo.modelo.Filme;
+import br.ufla.dcc.ppoo.modelo.Filme_old;
 import java.util.ArrayList;
 import java.util.List;
 /**
@@ -18,12 +17,12 @@ public class FilmeDAOLista {
   private static FilmeDAOLista instancia;
 
   //criando uma lista em memória dos filmes cadastrados
-  private final List<Filme> listaFilme;
+  private List<Filme_old> listaFilme;
 
   public FilmeDAOLista(){
     //Criando uma lista de objetos filmes filmes
-    listaFilme = new ArrayList<Filme>();
-    listaFilme.add(new Filme("A era do gelo","Animação", 2001, 120, "Uma incrível aventura pelo mundo gelado para um resgate de um bebê"));
+    listaFilme = new ArrayList<Filme_old>();
+    listaFilme.add(new Filme_old("A era do gelo","Animação", 2001, 120, "Uma incrível aventura pelo mundo gelado para um resgate de um bebê"));
 
   }
   public static FilmeDAOLista obterInstancia(){
@@ -31,6 +30,11 @@ public class FilmeDAOLista {
 
     return instancia;
   }
+  
+  public List<Filme_old> obterLista(){
+      return listaFilme;
+  }
+  
 /*
   * Criando métodos para realizar o crud na tabela
   * Esse método recebe um objeto com todas propriedades previamente setadas
@@ -39,17 +43,17 @@ public class FilmeDAOLista {
   *
   *
   */
-  public void adicionarFilme(Filme filme) {
+  public void adicionarFilme(Filme_old filme) {
       listaFilme.add(filme);
   }
-  public void EditarFilme(Filme filme) {
+  public void EditarFilme(Filme_old filme) {
       listaFilme.add(filme);
   }
-  public void RemoverFilme(Filme filme) {
+  public void RemoverFilme(Filme_old filme) {
       listaFilme.add(filme);
   }
-  public Filme ListarFilme(){
-      return (Filme) listaFilme;
+  public Filme_old ListarFilme(){
+      return (Filme_old) listaFilme;
   }
 
 

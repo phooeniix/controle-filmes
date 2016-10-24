@@ -10,7 +10,7 @@ import java.util.Arrays;
  *
  * @author phoenix
  */
-public class Filme {
+public class Filme_old {
     /*Criando atributos da classe, nome das variaveis e conteudo da janela de
       conteúdo da janela de filmes.
     */
@@ -25,7 +25,7 @@ public class Filme {
      * @return the nome
      */
 
-    public Filme(String nome, String genero, int ano, double duracao, String descricao){
+    public Filme_old(String nome, String genero, int ano, double duracao, String descricao){
       //pensando na lógica de auto increment para o cod+1 a cada new Filmes
       this.cod +=1;
       this.nome = nome;

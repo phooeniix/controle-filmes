@@ -3,7 +3,7 @@ package br.ufla.dcc.ppoo.gui;
 import br.ufla.dcc.ppoo.i18n.I18N;
 import br.ufla.dcc.ppoo.imagens.GerenciadorDeImagens;
 import br.ufla.dcc.ppoo.util.Utilidades;
-import br.ufla.dcc.ppoo.modelo.Filme;
+import br.ufla.dcc.ppoo.modelo.Filme_old;
 import br.ufla.dcc.ppoo.dao.lista.FilmeDAOLista;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -83,23 +83,27 @@ public class TelaMeusFilmes {
      * Constrói a janela tratando internacionalização, componentes e layout.
      */
     private void construirTabela() {
+        
         DefaultTableModel modelo = (DefaultTableModel) tbFilmes.getModel();
-        List<Filme> listaFilme = null;
-        int rowCount = modelo.getRowCount();
+        /*int rowCount = modelo.getRowCount();
         for (int i = 0; i < rowCount; i++) {
             modelo.removeRow(i);
-        }
-        for(Filme f: listaFilme){
-            modelo.addRow(new Object[]{f.getCod(), f.getNome(), f.getGenero()});
-        }
-        
-        
+        }*/
         Object[] titulosColunas = {
             I18N.obterRotuloFilmeCod(),
             I18N.obterRotuloFilmeNome(),
             I18N.obterRotuloFilmeGenero()
         };
-
+        
+        if(listaFilme.obterLista() != null){
+            for(Filme_old f: listaFilme.obterLista()){
+                modelo.addRow(new Object[]{f.getCod(), f.getNome(), f.getGenero()});;
+            }
+       
+        }
+//        DefaultTableModel model = new DefaultTableModel(
+//        listaFilme.obterLista().toArray(new String[listaFilme.obterLista().size()][]), titulosColunas);
+        
         // Dados "fake"
         Object[][] dados = {
             {1, "Gravidade", "Ficção Científica"},
@@ -108,6 +112,7 @@ public class TelaMeusFilmes {
         
 
         tbFilmes = new JTable(dados, titulosColunas);
+        //tbFilmes.setModel(model);
         tbFilmes.setPreferredScrollableViewportSize(new Dimension(500, 70));
         tbFilmes.setFillsViewportHeight(true);
 }
@@ -343,7 +348,7 @@ public class TelaMeusFilmes {
         String descricao = taDescricao.getText();
 
   //  System.out.println(nome + " " + genero + " " + ano + " " + duracao);
-        Filme filme = new Filme(nome, genero, ano, duracao, descricao);
+        Filme_old filme = new Filme_old(nome, genero, ano, duracao, descricao);
         //Criando um objeto no qual possui todas as opearções a serem realizadas
         //CRUD
         

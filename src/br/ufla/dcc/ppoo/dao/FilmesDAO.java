@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 package br.ufla.dcc.ppoo.dao;
-import br.ufla.dcc.ppoo.modelo.Filme;
+import br.ufla.dcc.ppoo.modelo.Filme_old;
 
 /**
  *
@@ -13,7 +13,7 @@ import br.ufla.dcc.ppoo.modelo.Filme;
 public interface FilmesDAO {
 
 
-    public void adicionarFilme(Filme filme);
-    public void editarFilme(Filme filme);
+    public void adicionarFilme(Filme_old filme);
+    public void editarFilme(Filme_old filme);
 
 }
