@@ -348,43 +348,67 @@ public class TelaMeusFilmes {
         txtDuracao.setText(texto);
         taDescricao.setText(texto);
     }
-
+    /*
+        Por conta de ser a mesma tela e usar o botão de salvar tanto para editar
+    quanto para inserir, criei essas variaveis para diferenciar quando for 
+    inserir ou editar, a variavel editar é um boolean para saber se ele tem a intenção de 
+    editar ou não, se ele clicar em editar, ele seta a variavel como true e passa o codigo
+    do objeto que sera editado
+    se ele for inserir nada será modificado.
+    
+    Não se esquecendo de quando a ação de editar é terminada ele volta o valor tradicional das variaveis
+    */
+    //aqui criei variaveis globais para verif
     boolean editar = false;
     Integer codEditar = null;
+    
+    //Função de salvar o filme
     private void salvarFilme() throws Exception{
+        //Criando objeto TFilmes, em que possui todos os atributos
+        TFilmes f = new TFilmes();
+
         //Pegando dados escritos dentro de todos jTExtFild
         //Armazenando em variáveis locais de função
-        TFilmes f = new TFilmes();
-        
         String nome = txtNome.getText();
         String genero = txtGenero.getText();
         int ano = Integer.parseInt(txtAno.getText());
         Double duracao = Double.parseDouble(txtDuracao.getText());
         String descricao = taDescricao.getText();
+        
+        //Colocando todos as variaveis capturadas anteriormente no objeto f
         f.setNome(nome);
         f.setDescricao(descricao);
         f.setAno(ano);
         f.setGenero(genero);
         f.setDuracao(duracao);
         
-        
+        //Perguntando ao usuário se ele realmente quer inserir o registro
         int x = JOptionPane.showConfirmDialog(null,I18N.obterConfirmacaoInsert());
+        //verifica se ele clicou no sim
         if(x==0){
+            //se a condição for verdade ele cria um objeto de persistence
             EntityManagerFactory emf = PersistenceSingleton.getInstance().getEntityManagerFactory();
-            
+            //crio um objeto da classe que realiza as operações do banco de dados
+            //criar, deletar, encontrar, etc
             TFilmesJpaController conFilme = new TFilmesJpaController(emf);
             
             //Se editar for true é pqe quem invocou a função era para editar
             if(editar){
+                //colocando o codigo do objeto no qual deseja editar
                 f.setCod(codEditar);
+                //atraves do objeto de operacoes chama a função de editar passando o objeto
                 conFilme.edit(f);
+                //voltando as variaveis para seus valores tradicionais
                 editar = false;
                 codEditar = null;
             }else{
                 //se editar for false é pqe quem invocou é para apenas inserir
                  conFilme.create(f);
             }
+            //Exibindo mensagem de sucesso para o usuaario saber que seu registro foi inserido
             JOptionPane.showMessageDialog(null, I18N.obterMensagemSucesso());
+            //Chamando a função preenchertabela para atualizar os dados na tela
+            //Não está funcionando
             preencherTabelaFilmes();
             
         }
@@ -411,27 +435,35 @@ public class TelaMeusFilmes {
         btnEditarFilme.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                    //Quando o usuário clicar em uma linha da coluna eu vou pegar em qual linha ele clicou    
                     int row = tbFilmes.getSelectedRow();
+                    //pegando a coluna que o usuário clicou
                     int column = tbFilmes.getSelectedColumn();
-
+                    //Pegando o código do objeto para remover, ou editar
                     Object id = tbFilmes.getModel().getValueAt(row, 0);
+                    //Transformando esse id em cod para ser colocado na função de editar ou remover
                     Integer cod = (Integer) id;
+                    //Criando uma persistence
+                    //Não criei uma persistence no contrutor para evitar dificuldades de encontra-la na manutenção
                     EntityManagerFactory emf = PersistenceSingleton.getInstance().getEntityManagerFactory();   
                     TFilmesJpaController filmeDAO = new TFilmesJpaController(emf);
                     
                     //Buscando Filmes de um cod selecionado 
                     TFilmes f = filmeDAO.findTFilmes(cod);
-                    
+                    //Depois de buscar aquele registro com o codigo do registro no qual o user clicou
+                    //seto todos eles nos campos para que possa ser modificados
                     txtNome.setText(f.getNome());
                     txtGenero.setText(f.getGenero());
+                    //Ano é uma variavel tipo INT, quando pego ela do banco de dados ela não é String
+                    //Aqui eu converto esse INT para String
                     txtAno.setText(String.valueOf(f.getAno()));
+                    //COnvertendo Duracao Double to String
                     txtDuracao.setText(String.valueOf(f.getDuracao()));
                     taDescricao.setText(f.getDescricao());
                     //passando o codigo
                     codEditar = cod;
                     //setando a variavel mostrando que eu quero editar
                     editar = true;
-                    
                 prepararComponentesEstadoEditouFilme();
             }
         });
@@ -459,16 +491,24 @@ public class TelaMeusFilmes {
         btnDeletarFilme.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                //Quer mesmo deletar?
                 if (Utilidades.msgConfirmacao(I18N.obterConfirmacaoDeletar())) {
+                    //pegando linha que foi clicada pelo usuario
                     int row = tbFilmes.getSelectedRow();
+                    //pegando qual coluna foi clicada pelo usuario
                     int column = tbFilmes.getSelectedColumn();
-
+                    //pegando o cód do objeto para remove-lo
                     Object id = tbFilmes.getModel().getValueAt(row, 0);
+                    //COnvertendo esse id para Integer o que é aceito para remover
                     Integer cod = (Integer) id;
+                    //Criando persitence
                     EntityManagerFactory emf = PersistenceSingleton.getInstance().getEntityManagerFactory();   
+                    //Classe de operações com banco de dados
                     TFilmesJpaController filmeDAO = new TFilmesJpaController(emf);
                     try {
+                        //Deletando o registro
                         filmeDAO.destroy(cod);
+                        //Exibindo mensagem de sucesso para o usuário
                         JOptionPane.showMessageDialog(null, I18N.obterMensagemSucesso());
                     } catch (NonexistentEntityException ex) {
                         Logger.getLogger(TelaMeusFilmes.class.getName()).log(Level.SEVERE, null, ex);
