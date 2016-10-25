@@ -3,6 +3,7 @@ package br.ufla.dcc.ppoo.gui;
 import br.ufla.dcc.persistence.PersistenceSingleton;
 import br.ufla.dcc.persistence.TFilmesJpaController;
 import br.ufla.dcc.persistence.TFilmes;
+import br.ufla.dcc.persistence.exceptions.NonexistentEntityException;
 import br.ufla.dcc.ppoo.i18n.I18N;
 import br.ufla.dcc.ppoo.imagens.GerenciadorDeImagens;
 import br.ufla.dcc.ppoo.util.Utilidades;
@@ -14,6 +15,8 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.persistence.EntityManagerFactory;
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -67,43 +70,41 @@ public class TelaMeusFilmes {
      */
     public TelaMeusFilmes(TelaPrincipal telaPrincipal) {
         this.telaPrincipal = telaPrincipal;
-        EntityManagerFactory emf = PersistenceSingleton.getInstance().getEntityManagerFactory();       
-
-        TFilmesJpaController filmeDAO = new TFilmesJpaController(emf);
-        
-        List<TFilmes> listaFilme = filmeDAO.findTFilmesEntities();
-        
-        preencherTabelaFilmes(listaFilme);
+        preencherTabelaFilmes();
     }
     
     /**
      * Adiciona um componente à tela.
      */
-    private void preencherTabelaFilmes( List<TFilmes> listaFilme ){        
+    private void preencherTabelaFilmes(){        
+        EntityManagerFactory emf = PersistenceSingleton.getInstance().getEntityManagerFactory();       
         
+        TFilmesJpaController filmeDAO = new TFilmesJpaController(emf);
+        //Fazendo consulta no banco de dadosbanco de dados
+        List<TFilmes> listaFilme = filmeDAO.findTFilmesEntities();
+        //colocando o titulo das colunas
         Object[] titulosColunas = {
             I18N.obterRotuloFilmeCod(),
             I18N.obterRotuloFilmeNome(),
             I18N.obterRotuloFilmeGenero()
         };
-        Object[][] dados = {
-            {1 ,"Gravidade", "Ficção Científica"}
-        };
+        //setando dados como nulo para contrução da tabela
+        Object[][] dados = null;
         
         
         //criando um DEFAULT MODELO para acessar métodos da tabela
         DefaultTableModel modelo = new DefaultTableModel(dados, titulosColunas);
         
-        // Dados "fake"
         tbFilmes = new JTable(modelo);
         tbFilmes.setPreferredScrollableViewportSize(new Dimension(500, 70));
         tbFilmes.setFillsViewportHeight(true);       
                 
-        
-//        int rowCount = modelo.getRowCount();
-//        for (int i = 0; i < rowCount; i++) {
-//            modelo.removeRow(i);
-//        }
+        //Deletando todas as linhas da tabela para inserir
+        //Lógica para evitar replicaçao de dados
+        int rowCount = modelo.getRowCount();
+        for (int i = 0; i < rowCount; i++) {
+            modelo.removeRow(i);
+        }
         
         //Percorrendo dados retornando do banco de dados e escrevendo na tabela
         for(TFilmes f: listaFilme){
@@ -122,6 +123,7 @@ public class TelaMeusFilmes {
         construirTela();
         configurarEventosTela();
         exibirTela();
+        preencherTabelaFilmes();
     }
 
     /**
@@ -346,8 +348,9 @@ public class TelaMeusFilmes {
         taDescricao.setText(texto);
     }
 
-    
-    private void salvarFilme(){
+    boolean editar = false;
+    Integer codEditar = null;
+    private void salvarFilme() throws Exception{
         //Pegando dados escritos dentro de todos jTExtFild
         //Armazenando em variáveis locais de função
         TFilmes f = new TFilmes();
@@ -364,17 +367,28 @@ public class TelaMeusFilmes {
         f.setGenero(genero);
         f.setDuracao(duracao);
         
+       
 
         
-        int x = JOptionPane.showConfirmDialog(null,"Deseja mesmo realizar essa operação?");
+        int x = JOptionPane.showConfirmDialog(null,I18N.obterConfirmacaoInsert());
         if(x==0){
             EntityManagerFactory emf = PersistenceSingleton.getInstance().getEntityManagerFactory();
             
             TFilmesJpaController conFilme = new TFilmesJpaController(emf);
             
-            conFilme.create(f);
-            JOptionPane.showMessageDialog(null, "Operação realizada com sucesso!");
-            preencherTabelaFilmes(null);
+            //Se editar for true é pqe quem invocou a função era para editar
+            if(editar){
+                f.setCod(codEditar);
+                conFilme.edit(f);
+                editar = false;
+                codEditar = null;
+            }else{
+                //se editar for false é pqe quem invocou é para apenas inserir
+                 conFilme.create(f);
+            }
+            JOptionPane.showMessageDialog(null, I18N.obterMensagemSucesso());
+            preencherTabelaFilmes();
+            
         }
     }
     /**
@@ -399,6 +413,27 @@ public class TelaMeusFilmes {
         btnEditarFilme.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                    int row = tbFilmes.getSelectedRow();
+                    int column = tbFilmes.getSelectedColumn();
+
+                    Object id = tbFilmes.getModel().getValueAt(row, 0);
+                    Integer cod = (Integer) id;
+                    EntityManagerFactory emf = PersistenceSingleton.getInstance().getEntityManagerFactory();   
+                    TFilmesJpaController filmeDAO = new TFilmesJpaController(emf);
+                    
+                    //Buscando Filmes de um cod selecionado 
+                    TFilmes f = filmeDAO.findTFilmes(cod);
+                    
+                    txtNome.setText(f.getNome());
+                    txtGenero.setText(f.getGenero());
+                    txtAno.setText(String.valueOf(f.getAno()));
+                    txtDuracao.setText(String.valueOf(f.getDuracao()));
+                    taDescricao.setText(f.getDescricao());
+                    //passando o codigo
+                    codEditar = cod;
+                    //setando a variavel mostrando que eu quero editar
+                    editar = true;
+                    
                 prepararComponentesEstadoEditouFilme();
             }
         });
@@ -406,8 +441,12 @@ public class TelaMeusFilmes {
         btnSalvarFilme.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //Função para salvar o filme
-                salvarFilme();
+                try {
+                    //Função para salvar o filme
+                    salvarFilme();
+                } catch (Exception ex) {
+                    Logger.getLogger(TelaMeusFilmes.class.getName()).log(Level.SEVERE, null, ex);
+                }
                 prepararComponentesEstadoInicial();
             }
         });
@@ -423,7 +462,20 @@ public class TelaMeusFilmes {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (Utilidades.msgConfirmacao(I18N.obterConfirmacaoDeletar())) {
-                    // Remover filme!
+                    int row = tbFilmes.getSelectedRow();
+                    int column = tbFilmes.getSelectedColumn();
+
+                    Object id = tbFilmes.getModel().getValueAt(row, 0);
+                    Integer cod = (Integer) id;
+                    EntityManagerFactory emf = PersistenceSingleton.getInstance().getEntityManagerFactory();   
+                    TFilmesJpaController filmeDAO = new TFilmesJpaController(emf);
+                    try {
+                        filmeDAO.destroy(cod);
+                        JOptionPane.showMessageDialog(null, I18N.obterMensagemSucesso());
+                    } catch (NonexistentEntityException ex) {
+                        Logger.getLogger(TelaMeusFilmes.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+
                 }
             }
         });

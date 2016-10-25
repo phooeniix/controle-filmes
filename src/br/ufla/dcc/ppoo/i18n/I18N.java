@@ -227,6 +227,14 @@ public class I18N {
     public static String obterTituloMensagemConfirmacao() {
         return rb.getString("confirmacao.titulo");
     }
+    
+    public static String obterMensagemSucesso(){
+        return rb.getString("status.mensagem.sucesso");
+    }
+    public static String obterConfirmacaoInsert(){
+        return rb.getString("confirmacao.inserir.descricao");
+    }
+    
 
     /**
      * Retorna o texto da mensagem Sobre.
