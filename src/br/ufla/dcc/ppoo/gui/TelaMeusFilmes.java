@@ -76,6 +76,7 @@ public class TelaMeusFilmes {
     /**
      * Adiciona um componente à tela.
      */
+    @SuppressWarnings("empty-statement")
     private void preencherTabelaFilmes(){        
         EntityManagerFactory emf = PersistenceSingleton.getInstance().getEntityManagerFactory();       
         
@@ -107,9 +108,9 @@ public class TelaMeusFilmes {
         }
         
         //Percorrendo dados retornando do banco de dados e escrevendo na tabela
-        for(TFilmes f: listaFilme){
+        listaFilme.stream().forEach((f) -> {
             modelo.addRow(new Object[]{f.getCod(),f.getNome(), f.getGenero()});
-        };
+        });
 
         
     }
@@ -360,15 +361,12 @@ public class TelaMeusFilmes {
         int ano = Integer.parseInt(txtAno.getText());
         Double duracao = Double.parseDouble(txtDuracao.getText());
         String descricao = taDescricao.getText();
-        
         f.setNome(nome);
         f.setDescricao(descricao);
         f.setAno(ano);
         f.setGenero(genero);
         f.setDuracao(duracao);
         
-       
-
         
         int x = JOptionPane.showConfirmDialog(null,I18N.obterConfirmacaoInsert());
         if(x==0){

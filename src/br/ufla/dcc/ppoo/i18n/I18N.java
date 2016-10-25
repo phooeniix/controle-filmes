@@ -229,7 +229,7 @@ public class I18N {
     }
     
     public static String obterMensagemSucesso(){
-        return rb.getString("status.mensagem.sucesso");
+        return rb.getString("confirmacao.mensagem.sucesso");
     }
     public static String obterConfirmacaoInsert(){
         return rb.getString("confirmacao.inserir.descricao");
