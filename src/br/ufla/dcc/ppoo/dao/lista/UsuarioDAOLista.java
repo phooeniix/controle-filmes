@@ -8,14 +8,14 @@ import java.util.List;
 /**
  * Implementação do Data Access Object (Padrão de Projeto) do Usuário através de
  * Lista em memória
- *
+ * 
  * @author Paulo Jr. e Julio Alves
  */
 public class UsuarioDAOLista implements UsuarioDAO {
 
     // instância única da classe (Padrão de Projeto Singleton)
     private static UsuarioDAOLista instancia;
-
+    
     // lista em em memória dos usuários cadastrados
     private final List<Usuario> listaUsuario;
 
@@ -32,13 +32,12 @@ public class UsuarioDAOLista implements UsuarioDAO {
         listaUsuario.add(new Usuario("flavia", senha, "Flávia"));
         listaUsuario.add(new Usuario("matheus", senha, "Matheus"));
         listaUsuario.add(new Usuario("alexandre", senha, "Alexandre"));
-        listaUsuario.add(new Usuario("Phoenix", senha, "123"));
 
     }
 
     /**
      * Retorna a instância única da classe (Padrão de Projeto Singleton)
-     *
+     * 
      * @return A instância única da classe
      */
     public static UsuarioDAOLista obterInstancia() {
@@ -50,7 +49,7 @@ public class UsuarioDAOLista implements UsuarioDAO {
 
     /**
      * Retorna o usuário a partir de seu login
-     *
+     * 
      * @param login Login do usuário a ser retornado.
      * @return Usuário correspondente ao login passado.
      */
@@ -66,7 +65,7 @@ public class UsuarioDAOLista implements UsuarioDAO {
 
     /**
      * Cadastra o usuário passado.
-     *
+     * 
      * @param usuario Usuário a ser cadastrado.
      */
     @Override
