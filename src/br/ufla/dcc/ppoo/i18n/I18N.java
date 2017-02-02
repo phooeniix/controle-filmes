@@ -227,6 +227,14 @@ public class I18N {
     public static String obterTituloMensagemConfirmacao() {
         return rb.getString("confirmacao.titulo");
     }
+    
+    public static String obterMensagemSucesso(){
+        return rb.getString("confirmacao.mensagem.sucesso");
+    }
+    public static String obterConfirmacaoInsert(){
+        return rb.getString("confirmacao.inserir.descricao");
+    }
+    
 
     /**
      * Retorna o texto da mensagem Sobre.
@@ -368,6 +376,10 @@ public class I18N {
      *
      * @return Texto do rótulo nome do filme.
      */
+    public static String obterRotuloFilmeCod() {
+        return rb.getString("rotulo.filme.cod");
+    }
+    
     public static String obterRotuloFilmeNome() {
         return rb.getString("rotulo.filme.nome");
     }
