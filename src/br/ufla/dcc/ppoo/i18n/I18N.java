@@ -426,4 +426,16 @@ public class I18N {
     public static String obterRotuloUsuarioNome() {
         return rb.getString("rotulo.usuario.nome");
     }
+
+    public static String obterErroFilmeJaCadastrado() {
+        return rb.getString("erro.cadastro.filme");
+    }
+    
+    public static String sucessoOperacao() {
+       return rb.getString("sucesso.operacao");
+    }
+    
+    public static String confirmacaoOperacao() {
+       return rb.getString("confirmacao.operacao");
+    }
 }

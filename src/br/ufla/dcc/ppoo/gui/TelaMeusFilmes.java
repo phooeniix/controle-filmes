@@ -1,7 +1,11 @@
 package br.ufla.dcc.ppoo.gui;
 
+import br.ufla.dcc.ppoo.dao.FilmeDAO;
+import br.ufla.dcc.ppoo.dao.lista.FilmeDAOLista;
 import br.ufla.dcc.ppoo.i18n.I18N;
 import br.ufla.dcc.ppoo.imagens.GerenciadorDeImagens;
+import br.ufla.dcc.ppoo.modelo.Filme;
+import br.ufla.dcc.ppoo.servicos.GerenciadorFilmes;
 import br.ufla.dcc.ppoo.util.Utilidades;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -10,10 +14,14 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -31,6 +39,7 @@ public class TelaMeusFilmes {
 
     // referência para a tela principal
     private final TelaPrincipal telaPrincipal;
+    private final GerenciadorFilmes repositorioFilme;
             
     // componentes da tela
     private JDialog janela;
@@ -60,6 +69,7 @@ public class TelaMeusFilmes {
      */
     public TelaMeusFilmes(TelaPrincipal telaPrincipal) {
         this.telaPrincipal = telaPrincipal;
+        this.repositorioFilme = new GerenciadorFilmes();
     }
 
     /**
@@ -80,7 +90,13 @@ public class TelaMeusFilmes {
             I18N.obterRotuloFilmeNome(),
             I18N.obterRotuloFilmeGenero()
         };
-
+        /*List<Filme> listaFilmes = repositorioFilme.listFilme();
+        for(Filme f: listaFilmes){
+            System.out.println(f.getCod());
+            System.out.println(f.getName());
+            System.out.println(f.getDuration());
+            System.out.println(f.getDescription());
+        }*/
         // Dados "fake"
         Object[][] dados = {
             {"Gravidade", "Ficção Científica"},
@@ -343,6 +359,17 @@ public class TelaMeusFilmes {
             @Override
             public void actionPerformed(ActionEvent e) {
                 prepararComponentesEstadoInicial();
+                Filme f = new Filme();
+                f.setName(txtNome.getText());
+                f.setDuration(Double.parseDouble(txtDuracao.getText()));
+                f.setDescription(taDescricao.getText());
+                f.setGenre(txtGenero.getText());
+                f.setYear(Integer.parseInt(txtAno.getText()));
+                try {
+                    repositorioFilme.cadastrarFilme(f);
+                } catch (Exception ex) {
+                    Logger.getLogger(TelaMeusFilmes.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
 

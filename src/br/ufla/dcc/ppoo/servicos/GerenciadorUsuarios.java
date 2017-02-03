@@ -18,7 +18,7 @@ public class GerenciadorUsuarios {
     private final UsuarioDAO repositorioUsuario;
     // atributo para controle de sessão (autenticação do usuário)
     private final SessaoUsuario sessaoUsuario;
-
+    
     /**
      * Constroi o gerenciador de usuários, inicializando as camadas de acesso a 
      * dados e de sessão.

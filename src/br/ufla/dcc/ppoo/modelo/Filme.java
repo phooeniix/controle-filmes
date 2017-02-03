@@ -13,10 +13,19 @@ public class Filme {
     private String name;
     private double duration;
     private int year;
-    private String descripion;
+    private String description;
     private String genre;
-
+    private int cod = 0;
+    
      public Filme(){    
+     }
+     public Filme(String name, double duration, int year,String description, String genre){
+        this.cod = ++cod;
+        this.description = description;
+        this.duration = duration;
+        this.genre = genre;
+        this.name = name;
+        this.year = year;
      }
     
     /**
@@ -62,17 +71,17 @@ public class Filme {
     }
 
     /**
-     * @return the descripion
+     * @return the description
      */
-    public String getDescripion() {
-        return descripion;
+    public String getDescription() {
+        return description;
     }
 
     /**
-     * @param descripion the descripion to set
+     * @param description the description to set
      */
-    public void setDescripion(String descripion) {
-        this.descripion = descripion;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     /**
@@ -88,4 +97,12 @@ public class Filme {
     public void setGenre(String genre) {
         this.genre = genre;
     }
+
+    /**
+     * @return the cod
+     */
+    public int getCod() {
+        return cod;
+    }
+
 }
