@@ -90,13 +90,15 @@ public class TelaMeusFilmes {
             I18N.obterRotuloFilmeNome(),
             I18N.obterRotuloFilmeGenero()
         };
-        /*List<Filme> listaFilmes = repositorioFilme.listFilme();
+        List<Filme> listaFilmes = repositorioFilme.listaFilme();
+        System.out.println(listaFilmes.size());
         for(Filme f: listaFilmes){
             System.out.println(f.getCod());
             System.out.println(f.getName());
             System.out.println(f.getDuration());
             System.out.println(f.getDescription());
-        }*/
+        }
+        System.out.println("Funcionou!!!");
         // Dados "fake"
         Object[][] dados = {
             {"Gravidade", "Ficção Científica"},
