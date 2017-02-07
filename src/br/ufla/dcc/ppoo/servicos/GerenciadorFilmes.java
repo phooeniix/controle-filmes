@@ -10,6 +10,8 @@ import br.ufla.dcc.ppoo.dao.lista.FilmeDAOLista;
 import br.ufla.dcc.ppoo.i18n.I18N;
 import br.ufla.dcc.ppoo.modelo.Filme;
 import br.ufla.dcc.ppoo.seguranca.SessaoUsuario;
+import java.util.List;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -30,6 +32,9 @@ public class GerenciadorFilmes {
             throw new Exception(I18N.obterErroFilmeJaCadastrado());
         }
         repositorioFilme.addFilme(f);
+        JOptionPane.showMessageDialog(null, I18N.sucessoOperacao());
     }
-    
+   public List<Filme> listaFilme(){
+       return repositorioFilme.listFilme();
+   }
 }

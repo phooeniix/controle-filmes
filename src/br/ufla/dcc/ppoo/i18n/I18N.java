@@ -173,6 +173,14 @@ public class I18N {
     public static String obterConfirmacaoSaida() {
         return rb.getString("confirmacao.saida.descricao");
     }
+    /**
+     * Retorna o texto da mensagem de confirmação para salvar.
+     *
+     * @return Texto da mensagem de confirmação de saída do sistema.
+     */
+    public static String obterConfirmacaoSave() {
+        return rb.getString("confirmacao.operacao");
+    }
 
     /**
      * Retorna o texto da mensagem de confirmação ao deletar.

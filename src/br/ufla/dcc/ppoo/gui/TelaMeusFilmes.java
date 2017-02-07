@@ -175,11 +175,11 @@ public class TelaMeusFilmes {
         tbFilmes.clearSelection();
         tbFilmes.setEnabled(false);
 
-        txtNome.setText("");
-        txtGenero.setText("");
-        txtAno.setText("");
-        txtDuracao.setText("");
-        taDescricao.setText("");
+        txtNome.setText("Meu filme");
+        txtGenero.setText("Genero");
+        txtAno.setText("2006");
+        txtDuracao.setText("120");
+        taDescricao.setText("Filme muito bom");
 
         txtNome.setEditable(true);
         txtGenero.setEditable(true);
@@ -361,10 +361,10 @@ public class TelaMeusFilmes {
                 prepararComponentesEstadoInicial();
                 Filme f = new Filme();
                 f.setName(txtNome.getText());
-                f.setDuration(Double.parseDouble(txtDuracao.getText()));
+                //f.setDuration(Double.parseDouble(txtDuracao.getText()));
                 f.setDescription(taDescricao.getText());
                 f.setGenre(txtGenero.getText());
-                f.setYear(Integer.parseInt(txtAno.getText()));
+                //f.setYear(Integer.parseInt(txtAno.getText()));
                 try {
                     repositorioFilme.cadastrarFilme(f);
                 } catch (Exception ex) {

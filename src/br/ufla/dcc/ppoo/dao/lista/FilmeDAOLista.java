@@ -33,7 +33,7 @@ public class FilmeDAOLista implements FilmeDAO {
     @Override
     public void addFilme(Filme filme) {
         try {
-            if(JOptionPane.showConfirmDialog(null, I18N.obterConfirmacaoSaida())== 1 ){
+            if(JOptionPane.showConfirmDialog(null, I18N.obterConfirmacaoSave())== 1 ){
                         listaFilme.add(filme);
                         JOptionPane.showMessageDialog(null, "Inserido com Sucesso!");
 
